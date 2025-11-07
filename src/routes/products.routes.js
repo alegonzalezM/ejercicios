@@ -1,4 +1,5 @@
 import express from 'express'
+//prueba 
 import {getAllProducts, getProductById} from '../controllers/products.controllers.js'
 
 const routes= express.Router();

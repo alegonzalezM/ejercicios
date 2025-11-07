@@ -25,6 +25,17 @@ app.use((req,res,next) => {
 app.use((req,res,next)=>{
     res.status(400).send("Recurso no encontrado o ruta inválida")
 })
+// const conver=()=>{
+// const jsonToConvert = {
+// "name": "Juan",
+// "age": 30,
+// "isStudent": true,
+// "courses": ["Matemáticas", "Programación"]
+// }
+// const data = JSON.parse(jsonToConvert);
+// console.log(data.name); // Juan
+// conver();
+
 app.listen(PORT, ()=>{
     console.log(`Servidor corriendo en http://localhost:${PORT}`)
 })

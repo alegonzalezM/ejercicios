@@ -14,6 +14,8 @@ router.post('/products/create', createProduct);
 router.delete('/products/:id', deleteProduct )
 
 router.put('/products/:id', editProduct )
+
+
  
 
 export default router;

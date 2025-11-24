@@ -1,19 +1,8 @@
-// const products = [
-//   {
-//     id: 1,
-//     name: "Producto 1",
-//     price: 1000,
-//   },
-//   {
-//     id: 2,
-//     name: "Producto 2",
-//     price: 2000,
-//   },
-// ];
-
 import { editProduct } from "../controllers/products.controller.js";
+import {doc, getDoc, updateDoc} from 'firebase/firestore'
+import {db} from '../data/data.js'
 import {
-  actualizarProducto,
+  editarProducto,
   agregarProducto,
   eliminarProducto,
   obtenerProducto,
@@ -23,8 +12,10 @@ import {
 export const getAllProductsService = async () => {
   try {
     const products = await obtenerProductos();
+    console.log("SERVICE:", products);
     return products;
   } catch (error) {
+    console.error("Error en service:", error);
     throw error;
   }
 };
@@ -59,16 +50,29 @@ export const deleteProductService = async (id) => {
     }}
   
 
-export const editProductService = async (id, product) => {
-  return(
-    new Promise(async(res,rej)=>{
-      try{
-        const newProduct = await actualizarProducto(id, product)
-        res(newProduct)
-      } catch(error){
-        rej(error)
-      }
-    })
-  )
+export const actualizarProductoService = async (id, producto) => {
+  try {
+    if (!producto || Object.keys(producto).length === 0) {
+      throw new Error("El cuerpo está vacío. Nada para actualizar.");
+    }
+    const docRef = doc(db, "productos", id);
+    const docSnap = await getDoc(docRef);
+    console.log(docSnap)
 
-}
+    if (!docSnap.exists()) {
+      throw new Error("El producto no existe");
+    }
+    await updateDoc(docRef, producto);
+
+    return {
+      success: true,
+      message: "Producto actualizado correctamente",
+      id,
+      data: producto
+    };
+
+  } catch (error) {
+    console.error("Error al actualizar producto:", error);
+    throw error;
+  }
+};

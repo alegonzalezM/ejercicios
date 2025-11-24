@@ -3,6 +3,9 @@ import cors from 'cors';
 import productsRouter from "./src/routes/products.routes.js"
 import authRouter from './src/routes/auth.routes.js'
 import {authentication} from "./src/middleware/authentication.js"
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./src/data/data.js"; // o ../data/data.js según ruta real
+import 'dotenv/config';
 
 const app= express();
 const PORT = process.env.PORT || 3000;
@@ -22,15 +25,15 @@ app.use(cors(corsOptions));
 app.use(express.json()); //transforma el body a JSON
 
 app.use('/api' , authRouter );
-app.use(authentication)
+
+// app.use(authentication)
 
 app.use((req, res ,next)=>{
    console.log(`Datos recibidos: ${req.method}, ${req.url} `); //intercepta c/solicitud q entra al servidor , ejecuta lo q le digo y le da paso con next
    next();
 })
 
-app.use('/api', productsRouter);
-//app.use('/api', authentication, productsRouter);
+app.use('/api', authentication, productsRouter);
 
 app.get('/api', (req, res) => {
   res.send('API funcionando correctamente');
@@ -40,17 +43,6 @@ app.get("/", (req, res) => {
   res.send("Ruta pública: cualquiera puede verla");
 });
 
-// app.get('/api/items', (req,res) =>{
-//     const category= req.query.category;
-//     const price= req.query.price;
-//   res.send(`Categoria y precio: ${category}, ${price}`)
-// })
-// app.get('/products/:id', (req, res) => {
-//     const itemId=req.params.id;
-//   res.send( `devolviendo item con id: ${itemId}` );
-// });
-
-
 // Middleware para manejar errores 404 debe ir al final
 app.use((req, res, next) => {
 res.status(404).send('Recurso no encontrado o ruta inválida');
@@ -59,7 +51,7 @@ res.status(404).send('Recurso no encontrado o ruta inválida');
 app.listen(PORT, () =>{
    console.log(`Servidor corriendo en http://localhost:${PORT}` )
 })
-//////////////////////////////////////////////////
+
 
 
 

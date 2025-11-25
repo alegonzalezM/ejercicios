@@ -48,11 +48,10 @@ app.use((req, res, next) => {
 res.status(404).send('Recurso no encontrado o ruta inválida');
 });
 
-app.listen(PORT, () =>{
-   console.log(`Servidor corriendo en http://localhost:${PORT}` )
-})
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Servidor local en http://localhost:${PORT}`);
+  });
+}
 
-
-
-
-
+export default app()

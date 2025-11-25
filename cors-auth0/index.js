@@ -3,8 +3,8 @@ import cors from 'cors';
 import productsRouter from "./src/routes/products.routes.js"
 import authRouter from './src/routes/auth.routes.js'
 import {authentication} from "./src/middleware/authentication.js"
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "./src/data/data.js"; // o ../data/data.js según ruta real
+// import { collection, getDocs } from "firebase/firestore";
+// import { db } from "./src/data/data.js"; // o ../data/data.js según ruta real
 import 'dotenv/config';
 
 const app= express();
@@ -54,4 +54,4 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-export default app()
+export default app

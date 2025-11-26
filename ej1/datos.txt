@@ -1,3 +1,0 @@
-nombre,apellido,email,pass
-juan,diaz,juan@diaz,1234 
-ana,perez,ane@per,3142

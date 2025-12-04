@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pagina de inicio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Coustard:wght@900&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset muy ligero */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(255,20,147,0.08), transparent 10%),
+        radial-gradient(1000px 500px at 90% 90%, rgba(0,191,255,0.04), transparent 10%),
+        linear-gradient(180deg, #05020a 0%, #0f0520 60%, #0b0712 100%);
+      font-family: 'Coustard', monospace;
+      color: #ffd94d;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      /* align-items: center; */
+      justify-content:flex-start;
+      margin-left: 3rem;
+      overflow: hidden;
+    }
+
+    /* Contenedor central */
+    .center {
+      text-align: center;
+      padding: 2rem;
+      width: 100%;
+    }
+
+    .titulo {
+      font-size: clamp(1.5rem, 8vw, 3rem); 
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      /* position: relative; */
+      display: inline-block;
+      line-height: 1;
+      transform: translateZ(0);
+      /* doble contorno + glow */
+      color: #ffef7a; /* base color */
+      text-shadow:
+        0 1px 0 #0009,             /* subtle dark offset */
+        0 4px 10px rgba(255,200,60,0.08),
+        0 0 18px rgba(255,160,40,0.16),
+        0 0 30px rgba(255,120,40,0.18);
+    }
+
+    /* Fake 3D pixel edge (offset copy) */
+    .titulo::before {
+      content: attr(data-text);
+      position: absolute;
+      left: 6px; top: 6px;
+      z-index: -1;
+      color: #ff5a5a;
+      mix-blend-mode: multiply;
+      /* filter: blur(0.6px); */
+      transform: translateZ(0);
+    }
+
+    /* Thin inner stripe */
+    .titulo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 6px;
+      /* subtle inner gradient for depth */
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      z-index: -0.5;
+      pointer-events: none;
+    }
+
+    /* small subtitle */
+    .sub {
+      font-family: sans-serif;
+      font-size: 0.62rem;
+      margin-top: 1.25rem;
+      opacity: 0.65;
+      letter-spacing: 0.15em;
+      color: #bfbfbf;
+    }
+
+    .sub-link{
+      color:#ffd94d;
+      text-decoration: none;
+    }
+
+    /* Scannlines (CRT) overlay */
+    .crt::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.06) 50%, rgba(255,255,255,0.02) 51%);
+      background-size: 100% 3px;
+      mix-blend-mode: overlay;
+      z-index: 10;
+      opacity: 0.35;
+    }
+
+    /* slight flicker animation to feel retro */
+    @keyframes flicker {
+      0%, 100% { opacity: 1; filter: none; transform: translateY(0); }
+      8% { opacity: 0.96; filter: brightness(0.98); transform: translateY(-0.5px); }
+      12% { opacity: 0.88; filter: hue-rotate(-5deg) saturate(1.1); transform: translateY(0.5px); }
+      50% { opacity: 1; filter: none; transform: translateY(0); }
+    }
+
+    .titulo {
+      animation: flicker 3.8s infinite linear;
+    }
+
+    /* Optional: tiny screen frame to center visually */
+    .frame {
+      padding: 2.5rem;
+      border-radius: 18px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.02);
+      backdrop-filter: blur(1px);
+      max-width: 100%;
+    }
+
+    /* mobile tweaks */
+    @media (max-width: 420px) {
+      .center { padding: 1rem; }
+      .sub { display: none; }
+    }
+  </style>
+</head>
+<body class="crt">
+  <div class="center frame">
+    <!-- Cambia SOLO el texto dentro del contenido o del data-text -->
+    <h1 class="titulo" data-text="PRODUCTOS">Productos</h1>
+    <div class="sub">Ver lista completa en <a href="http://localhost:3000/api/products" class="sub-link">VER PRODUCTOS</a></div>
+  </div>
+</body>
+</html>

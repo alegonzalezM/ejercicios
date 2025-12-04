@@ -5,13 +5,15 @@ import authRouter from './src/routes/auth.routes.js'
 import rutasLog from './src/routes/auth.routes.js'
 import {authentication} from "./src/middleware/authentication.js"
 import 'dotenv/config';
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app= express();
 const PORT = process.env.PORT || 3000;
 
 // app.use(cors());                   // Configuración básica: Permitir todos los orígenes, usar solo p' pruebas internas
 const corsOptions = {                 // Configuración avanzada: Permitir dominios específicos
-    origin: ['http://localhost:3000', 'https://midominio.com'], //Dominios permitidos, solo frontend desde ese puerto puede acceder   
+    origin: ['http://localhost:3000', 'https://midominio.com', 'http://localhost:5173', 'https://ejercicios-clon.vercel.app'], //Dominios permitidos, solo frontend desde ese puerto puede acceder   
     methods: ['GET', 'POST', 'PUT', 'DELETE'],   // Métodos HTTP permitidos
     allowedHeaders: ['Content-Type', 'Authorization'],    // Encabezados permitidos
     exposedHeaders: ['Content-Length'],         //Encabezados visibles al cliente
@@ -30,14 +32,27 @@ app.use((req, res ,next)=>{
    console.log(`Datos recibidos: ${req.method}, ${req.url} `); //intercepta c/solicitud q entra al servidor , ejecuta lo q le digo y le da paso con next
    next();
 })
-app.use('/api', authentication, productsRouter);
+app.use('/api', productsRouter);
 
 app.get('/api', (req, res) => {
   res.send('API funcionando correctamente');
 });
 
+// app.get("/", (req, res) => {
+//   res.send("Ruta pública: cualquiera puede verla");
+// });
+
 app.get("/", (req, res) => {
-  res.send("Ruta pública: cualquiera puede verla");
+  res.sendFile(path.resolve("public/index.html"));
+});
+app.use(express.static("public"));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Middleware para manejar errores 404 debe ir al final

@@ -12,16 +12,17 @@ const app= express();
 const PORT = process.env.PORT || 3000;
 
 // app.use(cors());                   // Configuración básica: Permitir todos los orígenes, usar solo p' pruebas internas
-const corsOptions = {                 // Configuración avanzada: Permitir dominios específicos
-    origin: ['http://localhost:3000', 'https://midominio.com', 'http://localhost:5173', 'https://ejercicios-clon.vercel.app'], //Dominios permitidos, solo frontend desde ese puerto puede acceder   
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],   // Métodos HTTP permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'],    // Encabezados permitidos
-    exposedHeaders: ['Content-Length'],         //Encabezados visibles al cliente
-    credentials: true,                  // Permitir cookies o credenciales
-    maxAge: 600,                       //cache preflight
-    optionsSuccessStatus: 204        //respuesta preflight exitosa
 
-};
+ const corsOptions = {                 // Configuración avanzada: Permitir dominios específicos
+origin: ['http://localhost:3000','http://localhost:5173', 'http://ejercicios-clon.vercel.app'], //Dominios permitidos, solo frontend desde ese puerto puede acceder   
+     methods: ['GET', 'POST', 'PUT', 'DELETE'],   // Métodos HTTP permitidos
+     allowedHeaders: ['Content-Type', 'Authorization'],    // Encabezados permitidos
+     exposedHeaders: ['Content-Length'],         //Encabezados visibles al cliente
+     credentials: true,                  // Permitir cookies o credenciales
+     maxAge: 600,                       //cache preflight
+     optionsSuccessStatus: 204        //respuesta preflight exitosa
+
+ };
 app.use(cors(corsOptions));
 app.use(express.json()); //transforma el body a JSON
 

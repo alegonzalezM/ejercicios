@@ -56,6 +56,8 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+app.use("/imagenes", express.static("public/imagenes"));  
+
 // Middleware para manejar errores 404 debe ir al final
 app.use((req, res, next) => {
 res.status(404).send('Recurso no encontrado o ruta inválida');

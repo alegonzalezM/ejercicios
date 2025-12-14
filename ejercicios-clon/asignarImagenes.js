@@ -149,106 +149,56 @@
  * - Usa URLs absolutas apuntando a tu backend en Vercel
  */
 
-import fs from "fs";
-import path from "path";
+import fetch from "node-fetch";
 
-// =============================
-// CONFIG FIRESTORE REST
-// =============================
 const PROJECT_ID = "test-back-node-b1678";
-const API_KEY = "AIzaSyBGxBVcLTI5aQSGlMIc-sl3ZH1YueaA2jw";
+const API_KEY = "TU_API_KEY";
 
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
+const BASE_IMG_URL = "https://ejercicios-clon.vercel.app/imagenes";
 
-// =============================
-// LEER IMÁGENES LOCALES
-// =============================
-const carpetaImagenes = path.join("public", "imagenes");
-const extensiones = [".jpg", ".jpeg", ".png", ".webp", ".jfif"];
-
-const archivos = fs.readdirSync(carpetaImagenes);
-
-// =============================
-// FIRESTORE: obtener documentos
-// =============================
 async function obtenerProductos() {
-  const url = `${FIRESTORE_URL}/productos?key=${API_KEY}`;
-  const res = await fetch(url);
+  const res = await fetch(`${FIRESTORE_URL}/productos?key=${API_KEY}`);
   const data = await res.json();
-
   return data.documents || [];
 }
 
-// =============================
-// FIRESTORE: actualizar documento
-// =============================
-async function actualizarProducto(documentPath, urlImagen) {
-  const url = `${FIRESTORE_URL}/${documentPath}?currentDocument.exists=true&updateMask.fieldPaths=imagen&key=${API_KEY}`;
+async function actualizarProducto(pathDoc, imagen) {
+  const url = `${FIRESTORE_URL}/${pathDoc}?updateMask.fieldPaths=imagen&key=${API_KEY}`;
 
   const body = {
-    fields: { imagen: { stringValue: urlImagen } }
+    fields: {
+      imagen: { stringValue: imagen }
+    }
   };
 
-  const res = await fetch(url, {
+  await fetch(url, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
-
-  if (!res.ok) {
-    const err = await res.text();
-    console.log("❌ Error Firestore:", err);
-  }
 }
 
-// =============================
-// PROCESO PRINCIPAL
-// =============================
 async function asignarImagenes() {
-  console.log("📥 Obteniendo productos...");
   const productos = await obtenerProductos();
 
-  let asignados = 0;
-  let noEncontrados = 0;
-
   for (const doc of productos) {
-    const id = doc.fields.id?.stringValue?.trim();
-
+    const id = doc.fields.id?.stringValue;
     if (!id) continue;
 
-    // buscar archivo local que empiece con el ID
-    const archivo = archivos.find((nombre) => {
-      const lower = nombre.toLowerCase();
-      return (
-        lower.startsWith(id.toLowerCase()) &&
-        extensiones.some((ext) => lower.endsWith(ext))
-      );
-    });
+    const imagenURL = `${BASE_IMG_URL}/${id}.jpg`;
 
-    if (!archivo) {
-      console.log(`⚠ No hay imagen local para ID: ${id}`);
-      noEncontrados++;
-      continue;
-    }
-
-     const urlImagen = `/imagenes/${archivo}`;
-
-    // Document path en Firestore
     const pathDoc = doc.name.replace(
       `projects/${PROJECT_ID}/databases/(default)/documents/`,
       ""
     );
 
-    await actualizarProducto(pathDoc, urlImagen);
+    await actualizarProducto(pathDoc, imagenURL);
 
-    console.log(`✔ ${id} → ${urlImagen}`);
-    asignados++;
+    console.log(`✔ ${id} → ${imagenURL}`);
   }
 
-  console.log("\n========= RESULTADO =========");
-  console.log("Imágenes asignadas:", asignados);
-  console.log("Sin imagen:", noEncontrados);
-  console.log("=============================\n");
+  console.log("🚀 Rutas cargadas en Firestore");
 }
 
 asignarImagenes();

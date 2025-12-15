@@ -33,19 +33,7 @@ app.use((req, res ,next)=>{
    console.log(`Datos recibidos: ${req.method}, ${req.url} `); //intercepta c/solicitud q entra al servidor , ejecuta lo q le digo y le da paso con next
    next();
 })
-app.use('/api', productsRouter);
 
-app.get('/api', (req, res) => {
-  res.send('API funcionando correctamente');
-});
-
-// app.get("/", (req, res) => {
-//   res.send("Ruta pública: cualquiera puede verla");
-// });
-
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve("public/index.html"));
-});
 app.use(express.static("public"));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,6 +45,20 @@ app.get("/", (req, res) => {
 });
 
 app.use("/imagenes", express.static("public/imagenes"));  
+app.use('/api', productsRouter);
+
+app.get('/api', (req, res) => {
+  res.send('API funcionando correctamente');
+});
+
+// app.get("/", (req, res) => {
+//   res.send("Ruta pública: cualquiera puede verla");
+// });
+
+// app.get("/", (req, res) => {
+//   res.sendFile(path.resolve("public/index.html"));
+// });
+
 
 // Middleware para manejar errores 404 debe ir al final
 app.use((req, res, next) => {

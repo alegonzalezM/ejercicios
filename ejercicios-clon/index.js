@@ -63,6 +63,8 @@ import cors from "cors";
 import productsRouter from "./src/routes/products.routes.js";
 import authRouter from "./src/routes/auth.routes.js";
 import 'dotenv/config';
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -82,6 +84,13 @@ app.use("/api", productsRouter);
 app.get("/api", (req, res) => {
   res.send("API funcionando correctamente");
 });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// archivos estáticos
+app.use("/imagenes", express.static(path.join(__dirname, "public/imagenes")));
+
 
 // 404 AL FINAL
 app.use((req, res) => {
